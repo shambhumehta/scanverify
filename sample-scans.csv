@@ -1,0 +1,6 @@
+Location,Barcode,Qty,Scanner
+A1,1001,5,alice
+A1,1002,2,alice
+A2,1003,2,bob
+A3,1004,7,bob
+B1,9999,2,carol

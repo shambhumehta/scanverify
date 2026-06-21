@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report &middot; ScanVerify</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="topbar">
+    <h1>ScanVerify &mdash; Four-Way Reconciliation</h1>
+    <div style="display:flex;gap:16px;align-items:center;">
+        <a id="exportLink" th:href="@{/export/excel(filter='problems')}" class="export-link">&#11015; Export to Excel</a>
+        <a th:href="@{/}">&larr; New Comparison</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- headline stats -->
+    <div class="summary">
+        <div class="stat">
+            <div class="num" th:text="${report.totalBarcodes}">0</div>
+            <div class="lbl">Total Barcodes</div>
+        </div>
+        <div class="stat ok">
+            <div class="num" th:text="${report.matched}">0</div>
+            <div class="lbl">Fully Matched</div>
+        </div>
+        <div class="stat bad">
+            <div class="num" th:text="${report.discrepancies}">0</div>
+            <div class="lbl">Discrepancies</div>
+        </div>
+        <div class="stat">
+            <div class="num" th:text="${report.totalOrdered}">0</div>
+            <div class="lbl">Ordered Qty</div>
+        </div>
+        <div class="stat">
+            <div class="num" th:text="${report.totalScanned}">0</div>
+            <div class="lbl">Good Qty</div>
+        </div>
+        <div class="stat warn">
+            <div class="num" th:text="${report.totalDamaged}">0</div>
+            <div class="lbl">Damaged Qty</div>
+        </div>
+        <div class="stat">
+            <div class="num" th:text="${report.totalInvoiced}">0</div>
+            <div class="lbl">Invoiced Qty</div>
+        </div>
+    </div>
+
+    <div class="allgood" th:if="${report.allMatched}">
+        &#10004; Order, Scan, Damage and Invoice all reconcile. No discrepancies found.
+    </div>
+
+    <!-- unified reconciliation table -->
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+            <div class="section-title" style="margin:0;">Four-Way Reconciliation</div>
+            <div class="toggle">
+                <button id="btnProblems" class="tbtn active" onclick="showView('problems')">Discrepancies only</button>
+                <button id="btnMatched" class="tbtn" onclick="showView('matched')">Matched only</button>
+                <button id="btnAll" class="tbtn" onclick="showView('all')">Show all</button>
+            </div>
+        </div>
+
+        <p class="empty" th:if="${report.problemItems.isEmpty()}">
+            No discrepancies &mdash; every barcode matches across all three files.
+        </p>
+        <p class="empty" id="noMatched" th:if="${report.matched == 0}" style="display:none;">
+            No fully-matched barcodes &mdash; every barcode has at least one discrepancy.
+        </p>
+
+        <table class="recon">
+            <thead>
+                <tr>
+                    <th>Barcode</th>
+                    <th class="numcol">Ordered</th>
+                    <th class="numcol">Good</th>
+                    <th class="numcol">Damaged</th>
+                    <th class="numcol" title="Good + Damaged">Received</th>
+                    <th class="numcol">Invoiced</th>
+                    <th class="numcol" title="(Good+Damaged) minus Ordered">Recv&nbsp;&Delta;</th>
+                    <th class="numcol" title="Invoiced minus Ordered">Inv&nbsp;&Delta;</th>
+                    <th>Scanner</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="li : ${report.items}"
+                    th:classappend="${li.clean} ? 'row-clean' : 'row-problem'">
+                    <td th:text="${li.barcode}" style="font-family:monospace;"></td>
+                    <td class="numcol" th:classappend="${!li.inOrder} ? 'absent'"
+                        th:text="${li.inOrder} ? ${li.orderedQty} : '—'"></td>
+                    <td class="numcol" th:classappend="${!li.inScan} ? 'absent'"
+                        th:text="${li.inScan} ? ${li.scannedQty} : '—'"></td>
+                    <td class="numcol"
+                        th:classappend="${!li.inDamage} ? 'absent' : (${li.damagedQty > 0} ? 'neg' : '')"
+                        th:text="${li.inDamage} ? ${li.damagedQty} : '—'"></td>
+                    <td class="numcol"
+                        th:text="${(li.inScan or li.inDamage)} ? ${li.receivedQty} : '—'"></td>
+                    <td class="numcol" th:classappend="${!li.inInvoice} ? 'absent'"
+                        th:text="${li.inInvoice} ? ${li.invoicedQty} : '—'"></td>
+                    <td class="numcol"
+                        th:classappend="${li.receivedVsOrder != 0} ? 'neg' : 'pos'"
+                        th:text="${li.inOrder and (li.inScan or li.inDamage)} ? ${(li.receivedVsOrder > 0 ? '+' : '') + li.receivedVsOrder} : '—'"></td>
+                    <td class="numcol"
+                        th:classappend="${li.invoiceVsOrder != 0} ? 'neg' : 'pos'"
+                        th:text="${li.inOrder and li.inInvoice} ? ${(li.invoiceVsOrder > 0 ? '+' : '') + li.invoiceVsOrder} : '—'"></td>
+                    <td style="font-size:13px;color:#475569;"
+                        th:text="${li.scannerDisplay}"></td>
+                    <td>
+                        <span th:each="st : ${li.statuses}"
+                              th:class="'chip chip-' + ${st.css}"
+                              th:text="${st.label}"
+                              style="margin-right:4px;"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- quick legend -->
+    <div class="card legend">
+        <div class="section-title">How to read this</div>
+        <p><span class="chip chip-ok">All match</span> ordered = good + damaged, and invoiced = ordered.</p>
+        <p><span class="chip chip-warn">Shortage</span> good + damaged still falls short of ordered.</p>
+        <p><span class="chip chip-bad">Over-received</span> good + damaged exceeds ordered.</p>
+        <p><span class="chip chip-warn">Damaged units present</span> some received units were logged as damaged.</p>
+        <p><span class="chip chip-bad">Invoice qty differs / Billed for damaged goods</span> billed amount doesn't match the order, or you're being charged for broken stock.</p>
+        <p><span class="chip chip-info">Not in order</span> appears in scan/damage/invoice but was never ordered.</p>
+        <p style="color:#6b7280;font-size:13px;margin-top:6px;">
+            "Received" = Good + Damaged. A barcode can carry several chips at once —
+            e.g. damaged units present <em>and</em> billed for damaged goods.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function showView(mode) {
+        document.querySelectorAll('tr.row-clean').forEach(function (r) {
+            r.style.display = (mode === 'problems') ? 'none' : '';
+        });
+        document.querySelectorAll('tr.row-problem').forEach(function (r) {
+            r.style.display = (mode === 'matched') ? 'none' : '';
+        });
+        document.getElementById('btnProblems').classList.toggle('active', mode === 'problems');
+        document.getElementById('btnMatched').classList.toggle('active', mode === 'matched');
+        document.getElementById('btnAll').classList.toggle('active', mode === 'all');
+
+        // show the "no matched rows" note only in matched view when none exist
+        var noMatched = document.getElementById('noMatched');
+        if (noMatched) noMatched.style.display = (mode === 'matched') ? '' : 'none';
+
+        // keep the Excel export in sync with the visible rows
+        var link = document.getElementById('exportLink');
+        if (link) link.href = '/export/excel?filter=' + mode;
+    }
+    // default: discrepancies only
+    showView('problems');
+</script>
+</body>
+</html>

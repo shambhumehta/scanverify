@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home &middot; ScanVerify</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="topbar">
+    <h1>ScanVerify</h1>
+    <form th:action="@{/logout}" method="post" style="margin:0;">
+        <button type="submit" style="background:none;border:none;color:#cbd6e8;cursor:pointer;font-size:14px;">Logout</button>
+    </form>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h2>Upload CSV Files</h2>
+        <div class="error" th:if="${error}" th:text="${error}"></div>
+        <form th:action="@{/verify}" method="post" enctype="multipart/form-data">
+            <div class="field">
+                <label for="orderFile">1. Order File</label>
+                <input type="file" id="orderFile" name="orderFile" accept=".csv" required>
+                <small>Format: <code>barcode,quantity</code> (header optional). What was ordered.</small>
+            </div>
+            <div class="field">
+                <label for="scanFile">2. Received Scan File (good condition)</label>
+                <input type="file" id="scanFile" name="scanFile" accept=".csv" required>
+                <small>Header row with <code>Barcode</code>, <code>Quantity</code>/<code>Qty</code> and <code>Scanner</code> (case-insensitive). Units received in good condition.</small>
+            </div>
+            <div class="field">
+                <label for="damageFile">3. Damage File (damaged units)</label>
+                <input type="file" id="damageFile" name="damageFile" accept=".csv" required>
+                <small>Header row with <code>Barcode</code>, <code>Quantity</code>/<code>Qty</code> and <code>Scanner</code>. Units received damaged.</small>
+            </div>
+            <div class="field">
+                <label for="invoiceFile">4. Invoice File</label>
+                <input type="file" id="invoiceFile" name="invoiceFile" accept=".csv" required>
+                <small>Header row with <code>Barcode</code> and <code>Quantity</code>/<code>Qty</code> (case-insensitive). What was billed.</small>
+            </div>
+            <button class="btn" type="submit">Compare &amp; Generate Report</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

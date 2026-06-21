@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login &middot; ScanVerify</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="login-wrap">
+    <div class="card">
+        <h2>ScanVerify Login</h2>
+        <div class="error" th:if="${param.error}">Invalid username or password.</div>
+        <div class="error" th:if="${param.logout}" style="background:#dbeafe;color:#1e40af;">
+            You have been logged out.
+        </div>
+        <form th:action="@{/login}" method="post">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" autofocus required>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button class="btn" type="submit" style="width:100%;">Sign in</button>
+        </form>
+        <small style="display:block;margin-top:14px;color:#9ca3af;">Default: admin / admin</small>
+    </div>
+</div>
+</body>
+</html>

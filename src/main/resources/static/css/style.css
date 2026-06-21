@@ -1,0 +1,126 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f6f9;
+    color: #1f2933;
+    line-height: 1.5;
+}
+.topbar {
+    background: #1f3a5f;
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.topbar h1 { font-size: 18px; font-weight: 600; }
+.topbar a { color: #cbd6e8; text-decoration: none; font-size: 14px; }
+.topbar a:hover { color: #fff; }
+.container { max-width: 960px; margin: 32px auto; padding: 0 16px; }
+.card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+.card h2 { font-size: 20px; margin-bottom: 16px; color: #1f3a5f; }
+.field { margin-bottom: 20px; }
+.field label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+.field small { color: #6b7280; display: block; margin-top: 4px; }
+input[type=file], input[type=text], input[type=password] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.btn {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn:hover { background: #1d4ed8; }
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.login-wrap {
+    max-width: 380px;
+    margin: 80px auto;
+}
+.summary { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.stat {
+    flex: 1;
+    min-width: 140px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.stat .num { font-size: 28px; font-weight: 700; }
+.stat .lbl { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: .5px; margin-top: 4px; }
+.stat.ok .num { color: #059669; }
+.stat.warn .num { color: #d97706; }
+.stat.bad .num { color: #dc2626; }
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eef0f3; font-size: 14px; }
+th { background: #f8fafc; font-weight: 600; color: #475569; }
+.section-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge.red { background: #fee2e2; color: #991b1b; }
+.badge.amber { background: #fef3c7; color: #92400e; }
+.badge.blue { background: #dbeafe; color: #1e40af; }
+.empty { color: #6b7280; font-size: 14px; padding: 8px 0; }
+.allgood {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+}
+.neg { color: #dc2626; font-weight: 600; }
+.pos { color: #059669; font-weight: 600; }
+
+/* ---- three-way reconciliation additions ---- */
+.toggle { display: inline-flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; }
+.tbtn {
+    background: #fff; border: none; padding: 8px 14px; font-size: 13px;
+    cursor: pointer; color: #475569; font-weight: 600;
+}
+.tbtn + .tbtn { border-left: 1px solid #d1d5db; }
+.tbtn.active { background: #1f3a5f; color: #fff; }
+
+table.recon td, table.recon th { vertical-align: middle; }
+.numcol { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.absent { color: #cbd5e1; }
+tr.row-problem { background: #fffdf7; }
+tr.row-problem td { border-bottom-color: #f1e9d2; }
+
+.chip {
+    display: inline-block; padding: 3px 9px; border-radius: 12px;
+    font-size: 12px; font-weight: 600; line-height: 1.4; white-space: nowrap;
+}
+.chip-ok   { background: #d1fae5; color: #065f46; }
+.chip-warn { background: #fef3c7; color: #92400e; }
+.chip-bad  { background: #fee2e2; color: #991b1b; }
+.chip-info { background: #dbeafe; color: #1e40af; }
+
+.legend p { margin: 6px 0; font-size: 14px; }
+
+.export-link {
+    background: #059669; color: #fff !important; padding: 8px 14px;
+    border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none;
+}
+.export-link:hover { background: #047857; }

@@ -1,0 +1,51 @@
+# ===== Build output =====
+target/
+dist/
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+
+# jpackage / native build artifacts
+*.exe
+*.msi
+runtime/
+ScanVerify/
+*.zip
+
+# ===== Maven =====
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+# ===== Eclipse / STS =====
+.settings/
+.project
+.classpath
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+bin/
+
+# ===== IntelliJ IDEA =====
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ===== VS Code =====
+.vscode/
+
+# ===== Logs & temp =====
+*.log
+logs/
+*.tmp
+
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Environment / secrets =====
+*.env
+application-local.properties
